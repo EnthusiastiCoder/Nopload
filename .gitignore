@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.astro/
+public/ort/
+public/codecs/
+test-results/
+playwright-report/
+coverage/
+plans/
+research/
+tools/info-server/content/
+.claude/permission-ask-log.jsonl
+.env*
+mistakes/
