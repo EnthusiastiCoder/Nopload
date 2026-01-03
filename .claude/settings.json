@@ -1,0 +1,92 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(cd:*)",
+      "Bash(pwd:*)",
+      "Bash(echo:*)",
+      "Bash(wc:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(stat:*)",
+      "Bash(diff:*)",
+      "Bash(tree:*)",
+      "Bash(which:*)",
+      "Bash(where:*)",
+      "Bash(tasklist)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(cp:*)",
+      "Bash(touch:*)",
+      "Bash(rmdir:*)",
+      "Bash(git:*)",
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(node:*)",
+      "Bash(pnpm:*)",
+      "Bash(yarn:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(pip:*)",
+      "Bash(pip3:*)",
+      "Bash(pytest:*)",
+      "Bash(ruff:*)",
+      "Bash(uvicorn:*)",
+      "Bash(alembic:*)",
+      "Bash(cargo:*)",
+      "Bash(rustc:*)",
+      "Bash(rustup:*)",
+      "Bash(ollama:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh issue:*)",
+      "Bash(gh auth status:*)",
+      "Bash(curl:*)",
+      "Bash(adb:*)",
+      "WebSearch",
+      "WebFetch(*)",
+      "Skill(*)",
+      "mcp__chrome-devtools__*",
+      "mcp__ui-critique__*"
+    ],
+    "deny": []
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell|mcp__.*|Skill|Read|Glob|Grep|WebSearch|WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/c/Python312/python.exe /c/Users/enthu/Projects/Nopload/.claude/hooks/check-allowlist.py"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun \"$CLAUDE_PROJECT_DIR/tools/info-server/answers-hook.ts\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun \"$CLAUDE_PROJECT_DIR/tools/info-server/answers-hook.ts\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
