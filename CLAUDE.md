@@ -68,6 +68,25 @@
 - **Push only after the history spread is applied.** The repo is created PRIVATE. Making it public, creating `main`/a PR and deploying to Cloudflare need the user's explicit approval.
 - Never touch clinicalintel, LMS, employer repos or `C:/Users/enthu/Projects/ImageTools`.
 
+## Project info server (how answers and artifacts are shown to Arpan)
+
+A local read-only server at **http://localhost:8797** shows what we're working on now and every artifact: a bird's-eye view first, details in stacked modals, and hover definitions for every term.
+
+- **Code:** `tools/info-server/` (committed).
+- **Content:** each person's own, gitignored, in `tools/info-server/content/`.
+- **Read first:** `tools/info-server/INFO-SERVER.md`, before making any infographic or report.
+- **Port:** `8797` is this workspace's entry in the machine-wide registry `C:/Users/enthu/Projects/Setup Prompts/info-server/ports.json` (`bun tools/info-server/port.ts lookup`). Never hardcode a port or reuse another project's.
+- **Start:** `bun tools/info-server/server.ts` from the repo root, in the background (it reads its port from the registry).
+- **Keep current:** update `content/now.json` (the home page) whenever the focus changes.
+- **Publish:**
+  1. Write a builder in `content/builders/<id>.ts` and run it.
+  2. Register it in `content/artifacts.json`.
+  3. Add its terms to `content/glossary.json`.
+  4. Run `bun tools/info-server/check.ts`.
+  5. Run `bun tools/info-server/visual-check.ts` (the separate VISUAL check; its result page is `/view/info-check`). Never run two at once.
+  6. Look at the screenshots yourself (layout AND content: numbers add up, references exist), then share ONLY the link `http://localhost:8797/view/<id>`: never a raw file path.
+- Every knowledge share beyond a few lines becomes a kit page here. Rules: visuals over text; every chart has a legend; ≤ 5 answer lines; every modal starts with a visual; every jargon term is in the glossary.
+
 ## Additional Instructions
 - The `prompts/` folder contains detailed tool-specific instructions and workflows. Read the relevant prompt file before using that tool for the first time in a session.
 - First session in a new workspace: accept the trust dialog. Until then Claude Code prints `Ignoring N permissions.allow entries from .claude/settings.json: this workspace has not been trusted` and the allowlist does nothing. Accept it interactively once, or set `projects["<abs/path>"].hasTrustDialogAccepted: true` in `~/.claude.json`.
@@ -76,3 +95,4 @@
 - Current prompts:
   - `prompts/chrome-devtools-mcp.md` — Chrome DevTools MCP: browser debugging, performance, memory profiling, Lighthouse audits.
   - `prompts/setup-workspace.md` — Workspace setup: this prompt itself, moved here after initial setup.
+  - `tools/info-server/INFO-SERVER.md` — Project info server: UX rules, content schemas and the kit page contract. Read before making any infographic or report.
