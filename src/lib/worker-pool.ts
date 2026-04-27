@@ -155,7 +155,7 @@ export async function comlinkSlotFactory<T, R>(makeWorker: () => Worker): Promis
           if (signal.aborted) return onAbort();
           signal.addEventListener('abort', onAbort, { once: true });
           remote
-            .run(Comlink.transfer(task, transfer), onProgress ? Comlink.proxy(onProgress) : undefined)
+            .run(Comlink.transfer(task, transfer) as Parameters<typeof remote.run>[0], onProgress ? Comlink.proxy(onProgress) : undefined)
             .then(resolve as (v: unknown) => void, reject)
             .finally(() => signal.removeEventListener('abort', onAbort));
         });
