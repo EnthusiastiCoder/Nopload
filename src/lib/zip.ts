@@ -1,5 +1,5 @@
 // ZIP packaging (fflate) and "save all" (single download, ZIP, or a folder).
-import { zip, type AsyncZippable } from 'fflate';
+import { type AsyncZippable, zip } from 'fflate';
 
 export interface NamedFile {
   name: string;
@@ -46,13 +46,20 @@ const mimeOf = (name: string) => MIME_BY_EXT[name.split('.').pop()?.toLowerCase(
 
 export const canSaveToFolder = (): boolean => typeof window !== 'undefined' && 'showDirectoryPicker' in window;
 
-type DirHandle = { getFileHandle(name: string, o: { create: boolean }): Promise<{ createWritable(): Promise<{ write(d: BufferSource): Promise<void>; close(): Promise<void> }> }> };
+type DirHandle = {
+  getFileHandle(
+    name: string,
+    o: { create: boolean },
+  ): Promise<{ createWritable(): Promise<{ write(d: BufferSource): Promise<void>; close(): Promise<void> }> }>;
+};
 
 /** One file: a direct download. Two or more: a ZIP. `toFolder`: write each file into a folder the user picks. */
 export async function saveAll(files: NamedFile[], opts: { toFolder?: boolean; zipName?: string } = {}): Promise<void> {
   if (files.length === 0) return;
   if (opts.toFolder && canSaveToFolder()) {
-    const dir = (await (window as unknown as { showDirectoryPicker(o: object): Promise<DirHandle> }).showDirectoryPicker({ mode: 'readwrite' }));
+    const dir = await (window as unknown as { showDirectoryPicker(o: object): Promise<DirHandle> }).showDirectoryPicker({
+      mode: 'readwrite',
+    });
     for (const f of files) {
       const handle = await dir.getFileHandle(f.name, { create: true });
       const w = await handle.createWritable();
