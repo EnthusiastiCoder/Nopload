@@ -7,10 +7,7 @@ export interface MetadataSummary {
   software?: string;
 }
 
-export function stripJpeg(
-  _bytes: Uint8Array,
-  _opts?: { keepIcc?: boolean; keepOrientation?: boolean },
-): Uint8Array {
+export function stripJpeg(_bytes: Uint8Array, _opts?: { keepIcc?: boolean; keepOrientation?: boolean }): Uint8Array {
   throw new Error('not implemented: stripJpeg');
 }
 
