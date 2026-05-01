@@ -18,22 +18,12 @@ export function prepModnet(
   throw new Error('not implemented: prepModnet');
 }
 
-export function prepU2net(
-  _rgba: Uint8Array | Uint8ClampedArray,
-  _w: number,
-  _h: number,
-): { tensor: Float32Array; tw: number; th: number } {
+export function prepU2net(_rgba: Uint8Array | Uint8ClampedArray, _w: number, _h: number): { tensor: Float32Array; tw: number; th: number } {
   throw new Error('not implemented: prepU2net');
 }
 
 /** `matte` values are in [0,1]; the output is 0..255, bilinear, corner-aligned. */
-export function upsampleMatte(
-  _matte: Float32Array,
-  _mw: number,
-  _mh: number,
-  _W: number,
-  _H: number,
-): Uint8ClampedArray {
+export function upsampleMatte(_matte: Float32Array, _mw: number, _mh: number, _W: number, _H: number): Uint8ClampedArray {
   throw new Error('not implemented: upsampleMatte');
 }
 
@@ -46,12 +36,7 @@ export function applyMatte(
   throw new Error('not implemented: applyMatte');
 }
 
-export function composite(
-  _rgba: Uint8ClampedArray,
-  _alpha: Uint8ClampedArray,
-  _background: Background,
-  _dims: Dims,
-): Uint8ClampedArray {
+export function composite(_rgba: Uint8ClampedArray, _alpha: Uint8ClampedArray, _background: Background, _dims: Dims): Uint8ClampedArray {
   throw new Error('not implemented: composite');
 }
 
