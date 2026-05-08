@@ -1,0 +1,137 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+
+/* Manual theme toggle: <html data-theme="dark|light">. Without it, the OS preference decides. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Accent: electric violet. */
+  --color-accent-50: oklch(0.97 0.02 285);
+  --color-accent-100: oklch(0.94 0.04 285);
+  --color-accent-200: oklch(0.88 0.08 285);
+  --color-accent-300: oklch(0.79 0.13 285);
+  --color-accent-400: oklch(0.68 0.19 285);
+  --color-accent-500: oklch(0.58 0.24 285);
+  --color-accent-600: oklch(0.51 0.25 285);
+  --color-accent-700: oklch(0.44 0.22 285);
+  --color-accent-800: oklch(0.37 0.17 285);
+  --color-accent-900: oklch(0.29 0.12 285);
+
+  /* Secondary: mint, for "done" and savings. */
+  --color-mint-400: oklch(0.8 0.15 165);
+  --color-mint-500: oklch(0.72 0.16 165);
+  --color-mint-600: oklch(0.6 0.14 165);
+
+  /* Semantic surfaces, switched per theme below. */
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-ring: var(--ring);
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  --shadow-soft: 0 1px 2px rgb(15 15 30 / 0.06), 0 4px 16px rgb(15 15 30 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(15 15 30 / 0.08), 0 12px 32px rgb(15 15 30 / 0.12);
+  --shadow-glow: 0 0 0 1px var(--color-accent-500), 0 8px 32px oklch(0.58 0.24 285 / 0.35);
+
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 360ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:root {
+  color-scheme: light;
+  --bg: oklch(0.985 0.004 285);
+  --surface: oklch(1 0 0);
+  --surface-2: oklch(0.965 0.008 285);
+  --line: oklch(0.91 0.01 285);
+  --fg: oklch(0.21 0.02 285);
+  --muted: oklch(0.47 0.02 285);
+  --ring: oklch(0.58 0.24 285);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: oklch(0.16 0.012 285);
+    --surface: oklch(0.2 0.014 285);
+    --surface-2: oklch(0.24 0.016 285);
+    --line: oklch(0.3 0.018 285);
+    --fg: oklch(0.96 0.005 285);
+    --muted: oklch(0.74 0.015 285);
+    --ring: oklch(0.72 0.17 285);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: oklch(0.16 0.012 285);
+  --surface: oklch(0.2 0.014 285);
+  --surface-2: oklch(0.24 0.016 285);
+  --line: oklch(0.3 0.018 285);
+  --fg: oklch(0.96 0.005 285);
+  --muted: oklch(0.74 0.015 285);
+  --ring: oklch(0.72 0.17 285);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background: var(--color-bg);
+    color: var(--color-fg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    min-height: 100dvh;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: var(--color-accent-200);
+    color: var(--color-accent-900);
+  }
+}
+
+@layer components {
+  .checkerboard {
+    background-color: #fff;
+    background-image:
+      linear-gradient(45deg, #e5e5ea 25%, transparent 25%), linear-gradient(-45deg, #e5e5ea 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #e5e5ea 75%), linear-gradient(-45deg, transparent 75%, #e5e5ea 75%);
+    background-size: 20px 20px;
+    background-position:
+      0 0,
+      0 10px,
+      10px -10px,
+      -10px 0;
+  }
+  .hero-glow {
+    background:
+      radial-gradient(60% 50% at 50% 0%, oklch(0.58 0.24 285 / 0.18), transparent 70%),
+      radial-gradient(40% 40% at 85% 20%, oklch(0.72 0.16 165 / 0.12), transparent 70%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
