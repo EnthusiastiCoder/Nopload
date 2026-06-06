@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+
+const jsonLd = [{ '@type': 'WebPage', name: 'Privacy', description: 'How Nopload keeps your images on your device.' }];
+---
+
+<Base
+  title="Privacy: Your Images Never Leave Your Device | Nopload"
+  description="Nopload has no server that receives images, no analytics and no cookies. Here is how it works and how you can check it yourself in DevTools."
+  path="/privacy"
+  jsonLd={jsonLd}
+>
+  <article class="prose mx-auto max-w-2xl space-y-6">
+    <h1 class="text-3xl font-bold tracking-tight">Privacy</h1>
+    <p class="text-lg text-muted">Short version: your images never leave your device. There is nothing to upload them to.</p>
+    <section class="space-y-2">
+      <h2 class="text-xl font-semibold">What happens to your images</h2>
+      <p>
+        When you add an image, your browser reads it into memory. All processing (background removal, compression, conversion, resizing,
+        metadata removal) runs in this tab, in WebAssembly and on your GPU when available. Results are created in the tab and saved by your
+        browser's normal download. Closing the tab discards everything.
+      </p>
+    </section>
+    <section class="space-y-2">
+      <h2 class="text-xl font-semibold">What we collect</h2>
+      <p>Nothing. No analytics, no cookies, no fingerprinting, no third-party scripts, fonts or CDNs. There is no account to create.</p>
+      <p>
+        Your theme choice is kept in your browser's local storage, and the app files (and the AI model, if you choose to download it) are kept
+        in your browser's cache so the app works offline. You can clear both from your browser settings.
+      </p>
+    </section>
+    <section class="space-y-2">
+      <h2 class="text-xl font-semibold">How it is enforced</h2>
+      <p>
+        Every page is served with a Content-Security-Policy that only allows connections to this site (<code>connect-src 'self'</code>). Even if
+        some code tried to send data elsewhere, the browser would block it.
+      </p>
+    </section>
+    <section class="space-y-2">
+      <h2 class="text-xl font-semibold">Check it yourself</h2>
+      <p>
+        Click the <strong>0 uploads</strong> badge at the top of any page to see every request the page has made. Or open DevTools, go to the
+        Network tab, process an image and watch: no request carries your file.
+      </p>
+    </section>
+    <section class="space-y-2">
+      <h2 class="text-xl font-semibold">Hosting</h2>
+      <p>
+        The site is static files on Cloudflare Pages. Like any web host, Cloudflare may log standard request data (such as IP address and
+        page URL) to deliver and protect the site. Your images are never part of any request.
+      </p>
+    </section>
+  </article>
+</Base>
