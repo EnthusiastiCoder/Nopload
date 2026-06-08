@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+
+const notices = [
+  ['Astro', 'MIT', 'https://github.com/withastro/astro'],
+  ['Preact', 'MIT', 'https://github.com/preactjs/preact'],
+  ['Tailwind CSS', 'MIT', 'https://github.com/tailwindlabs/tailwindcss'],
+  ['Comlink', 'Apache-2.0', 'https://github.com/GoogleChromeLabs/comlink'],
+  ['Inter (font)', 'OFL-1.1', 'https://github.com/rsms/inter'],
+  ['fflate', 'MIT', 'https://github.com/101arrowz/fflate'],
+  ['exifr', 'MIT', 'https://github.com/MikeKovarik/exifr'],
+  ['Workbox', 'MIT', 'https://github.com/GoogleChrome/workbox'],
+  ['Lucide icons', 'ISC', 'https://github.com/lucide-icons/lucide'],
+];
+const jsonLd = [{ '@type': 'AboutPage', name: 'About Nopload', description: 'Why Nopload exists and the open source it is built on.' }];
+---
+
+<Base
+  title="About Nopload: Image Tools Built for Privacy"
+  description="Why Nopload exists, who makes it, and the open source projects it is built on. Private image editing that runs entirely in your browser."
+  path="/about"
+  jsonLd={jsonLd}
+>
+  <article class="mx-auto max-w-2xl space-y-6">
+    <h1 class="text-3xl font-bold tracking-tight">About Nopload</h1>
+    <p class="text-lg text-muted">Image tools that do their work on your device, so you never have to hand your photos to a stranger's server.</p>
+    <section class="space-y-2">
+      <h2 class="text-xl font-semibold">Why</h2>
+      <p>
+        Most online image tools upload your files, add a watermark, cap the resolution or ask for an account. Browsers are now powerful
+        enough to do this work locally, including AI background removal. Nopload is free, has no account and keeps every image in your tab.
+      </p>
+    </section>
+    <section class="space-y-2">
+      <h2 class="text-xl font-semibold">Who</h2>
+      <p>Nopload is made by Arpan Mandal.</p>
+    </section>
+    <section id="notices" class="space-y-2">
+      <h2 class="text-xl font-semibold">Open source notices</h2>
+      <p>Nopload is built on these projects. Thank you to their authors.</p>
+      <ul class="divide-y divide-line rounded-xl border border-line bg-surface">
+        {
+          notices.map(([name, licence, url]) => (
+            <li class="flex items-center justify-between gap-4 px-4 py-3 text-sm">
+              <a href={url} class="font-medium underline underline-offset-4" rel="noopener">
+                {name}
+              </a>
+              <span class="text-muted">{licence}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </article>
+</Base>
