@@ -1,0 +1,15 @@
+---
+// Placeholder pages for tools that are not live yet. Rule for tool workstreams: when a tool
+// ships, set its meta.ts status to 'live' and add a dedicated src/pages/<slug>.astro (for the
+// background remover also its alias slugs); this route then stops generating that slug.
+import ToolPage from '../layouts/ToolPage.astro';
+import { type Tool, tools } from '../tools/registry';
+
+export function getStaticPaths() {
+  return tools.filter((t) => t.status === 'soon').map((tool) => ({ params: { tool: tool.slug }, props: { tool } }));
+}
+
+const { tool } = Astro.props as { tool: Tool };
+---
+
+<ToolPage tool={tool} />
