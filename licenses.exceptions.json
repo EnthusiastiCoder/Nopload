@@ -1,0 +1,8 @@
+[
+  { "name": "@img/sharp-*", "license": "Apache-2.0 AND LGPL-3.0-or-later", "reason": "Build-time only (Astro image service, prebuilt libvips). Not shipped to the browser." },
+  { "name": "caniuse-lite", "license": "CC-BY-4.0", "reason": "Build-time browser support data. Not shipped." },
+  { "name": "common-ancestor-path", "license": "BlueOak-1.0.0", "reason": "Permissive (OSI-approved). Build-time only." },
+  { "name": "graceful-fs", "license": "BlueOak-1.0.0", "reason": "Permissive (OSI-approved). Build-time only." },
+  { "name": "lru-cache", "license": "BlueOak-1.0.0", "reason": "Permissive (OSI-approved). Build-time only." },
+  { "name": "sax", "license": "BlueOak-1.0.0", "reason": "Permissive (OSI-approved). Build-time only (sitemap)." }
+]
