@@ -1,0 +1,40 @@
+{
+  "models": [
+    {
+      "id": "modnet-quantized",
+      "path": "public/models/modnet/model_quantized.onnx",
+      "url": "https://huggingface.co/Xenova/modnet/resolve/fa2fa546052fba4c08921230a26cc69a333fca12/onnx/model_quantized.onnx",
+      "revision": "fa2fa546052fba4c08921230a26cc69a333fca12",
+      "sha256": "92e49898c3e05a6d7a944fc67a8cb87c4aad754ffb6ebd949528c7d1105fee3a",
+      "bytes": 6632188,
+      "license": "Apache-2.0",
+      "licenseSource": "https://github.com/ZHKKKe/MODNet/blob/28165a451e4610c9d77cfdf925a94610bb2810fb/LICENSE",
+      "modelCard": "https://huggingface.co/Xenova/modnet/blob/fa2fa546052fba4c08921230a26cc69a333fca12/README.md",
+      "note": "Used on the WASM (CPU) path."
+    },
+    {
+      "id": "modnet-fp16",
+      "path": "public/models/modnet/model_fp16.onnx",
+      "url": "https://huggingface.co/Xenova/modnet/resolve/fa2fa546052fba4c08921230a26cc69a333fca12/onnx/model_fp16.onnx",
+      "revision": "fa2fa546052fba4c08921230a26cc69a333fca12",
+      "sha256": "25f165da9bfd30830a575f1f0490f1acd995975cb349bc02f3d79332e1fe5cf6",
+      "bytes": 12984781,
+      "license": "Apache-2.0",
+      "licenseSource": "https://github.com/ZHKKKe/MODNet/blob/28165a451e4610c9d77cfdf925a94610bb2810fb/LICENSE",
+      "modelCard": "https://huggingface.co/Xenova/modnet/blob/fa2fa546052fba4c08921230a26cc69a333fca12/README.md",
+      "note": "Used on the WebGPU path."
+    },
+    {
+      "id": "u2netp",
+      "path": "public/models/u2netp/u2netp.onnx",
+      "url": "https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2netp.onnx",
+      "revision": "7fb6683169d588f653281d53c3c258838194c950",
+      "sha256": "309c8469258dda742793dce0ebea8e6dd393174f89934733ecc8b14c76f4ddd8",
+      "bytes": 4574861,
+      "license": "Apache-2.0",
+      "licenseSource": "https://github.com/xuebinqin/U-2-Net/blob/ac7e1c817ecab7c7dff5ce6b1abba61cd213ff29/LICENSE",
+      "modelCard": "https://github.com/danielgatis/rembg/blob/7fb6683169d588f653281d53c3c258838194c950/LICENSE.txt",
+      "note": "Object mode. Weights Apache-2.0 (U-2-Net); ONNX export from rembg (MIT). revision = commit of the rembg v0.0.0 release tag."
+    }
+  ]
+}
