@@ -23,7 +23,8 @@ export const U2NET_SIZE = 320;
 export function modnetSize(w: number, h: number): { tw: number; th: number } {
   let scale = MODNET_SHORT / Math.min(w, h);
   if (Math.max(w, h) * scale > MODNET_LONG_MAX) scale = MODNET_LONG_MAX / Math.max(w, h);
-  const snap = (v: number) => Math.max(MODNET_STEP, Math.floor((v * scale) / MODNET_STEP) * MODNET_STEP);
+  // The epsilon absorbs float error: 3336 * (512 / 3336) is 511.99..., which must still snap to 512.
+  const snap = (v: number) => Math.max(MODNET_STEP, Math.floor((v * scale) / MODNET_STEP + 1e-6) * MODNET_STEP);
   return { tw: snap(w), th: snap(h) };
 }
 
