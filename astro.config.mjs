@@ -1,4 +1,6 @@
 // @ts-check
+
+import { fileURLToPath } from 'node:url';
 import preact from '@astrojs/preact';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
@@ -58,6 +60,17 @@ export default defineConfig({
   server: { port: 4321, headers: isolation },
   vite: {
     plugins: [tailwindcss()],
+    resolve: {
+      // ORT's default entries inline the glue and reference the .wasm via import.meta.url, so Vite
+      // would emit a second copy of each wasm into dist/_astro. The "extern wasm" builds load both
+      // from ort.env.wasm.wasmPaths (/ort/, copied by scripts/copy-runtime-assets.mjs) instead.
+      alias: [
+        {
+          find: /^onnxruntime-web\/(wasm|jspi)$/,
+          replacement: fileURLToPath(new URL('./node_modules/onnxruntime-web/dist/ort.$1.min.mjs', import.meta.url)),
+        },
+      ],
+    },
     server: { headers: isolation },
     preview: { headers: isolation },
     worker: { format: 'es' },
