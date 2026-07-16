@@ -21,9 +21,9 @@ Licence: written for this repo (© Arpan Mandal).
 
 | File | Owner | Required properties | Source | Licence |
 |---|---|---|---|---|
-| `portrait.jpg` | WS2 | A person on a distinct background | _TBD_ | must be CC0 / public domain / permissive |
-| `portrait.mask.json` | WS2 | `{"subject": {"x", "y", "w", "h"}}`: a hand-marked box fully inside the subject, in `portrait.jpg` pixels | hand-made | © Arpan Mandal |
-| `product.jpg` | WS2 | A product / object photo | _TBD_ | must be CC0 / public domain / permissive |
+| `portrait.jpg` | WS2 | A person on a distinct background | [File:Portrait_with_black_hair,_3080644.jpg](https://commons.wikimedia.org/wiki/File:Portrait_with_black_hair,_3080644.jpg) by himanshugunarathna ([Pixabay 3080644](https://pixabay.com/en/fashion-woman-portrait-model-3080644/)). Resized to 1600 px wide, cropped at x >= 300, then padded on the right with a mirrored copy of the left 340 px background strip so all four 10% corners are background (1640x1000). | CC0 1.0 |
+| `portrait.mask.json` | WS2 | `{"subject": {"x", "y", "w", "h"}}`: a hand-marked box fully inside the subject, in `portrait.jpg` pixels | hand-made: the cheeks and nose, below the eyes | © Arpan Mandal |
+| `product.jpg` | WS2 | A product / object photo | [File:Cup of tea isolated on white background - Petr Kratochvil.jpg](https://commons.wikimedia.org/wiki/File:Cup_of_tea_isolated_on_white_background_-_Petr_Kratochvil.jpg) by Petr Kratochvil (publicdomainpictures.net image 4291), resized to 1280x853 | CC0 1.0 |
 | `sample.heic` | WS3 | A redistributable HEIC (or one generated with a permissively licensed encoder, documented here) | _TBD_ | must be redistributable |
 | `sample.heic.json` | WS3 | `{"width", "height"}` of `sample.heic` after orientation | hand-made | © Arpan Mandal |
 
