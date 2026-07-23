@@ -12,12 +12,14 @@ interface Props {
   path: string;
   jsonLd?: Record<string, unknown>[];
   noindex?: boolean;
+  /** Social card path, e.g. "/og/remove-background.png". */
+  ogImage?: string;
 }
 
-const { title, description, path, jsonLd = [], noindex = false } = Astro.props;
+const { title, description, path, jsonLd = [], noindex = false, ogImage: ogPath = '/og/default.png' } = Astro.props;
 const site = Astro.site ?? new URL('https://nopload.pages.dev');
 const canonical = new URL(path, site).href;
-const ogImage = new URL('/og/default.png', site).href;
+const ogImage = new URL(ogPath, site).href;
 const nav = mainTools();
 ---
 
