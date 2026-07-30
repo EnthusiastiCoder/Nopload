@@ -1,0 +1,32 @@
+---
+// The background remover. Its two alias landing pages share the same island.
+import ToolPage from '../layouts/ToolPage.astro';
+import { type Tool, tools } from '../tools/registry';
+import RemoveBackground from '../tools/remove-background/RemoveBackground';
+
+const tool = tools.find((t) => t.id === 'remove-background') as Tool;
+const faq = [
+  {
+    q: 'How does it remove the background without uploading my photo?',
+    a: 'An AI model (MODNet, about 6.6 MB) is downloaded to your browser once and runs on your device with WebAssembly, or on your GPU through WebGPU when available. Your photo never leaves your computer or phone.',
+  },
+  {
+    q: 'Is the result full resolution?',
+    a: 'Yes. The cut-out is saved at the exact size of your original photo, as a transparent PNG, a WebP, or a JPG with the background of your choice.',
+  },
+  {
+    q: 'Can I fix the edges by hand?',
+    a: 'Yes. Use the Erase and Restore brushes to correct any spot, zoom in with the mouse wheel or a pinch, and undo with Ctrl+Z. Edge softness smooths the outline.',
+  },
+];
+---
+
+<ToolPage
+  tool={tool}
+  heading="Remove the background from any photo"
+  subtitle="Full resolution, transparent PNG, free. The AI runs on your device, so your photo is never uploaded."
+  faq={faq}
+  ogImage="/og/remove-background.png"
+>
+  <RemoveBackground client:load />
+</ToolPage>
