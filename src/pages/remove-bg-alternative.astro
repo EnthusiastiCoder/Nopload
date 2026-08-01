@@ -1,0 +1,32 @@
+---
+// remove.bg alternative landing page: same island as /remove-background.
+import ToolPage from '../layouts/ToolPage.astro';
+import { type Tool, tools } from '../tools/registry';
+import RemoveBackground from '../tools/remove-background/RemoveBackground';
+
+const tool = tools.find((t) => t.id === 'remove-bg-alternative') as Tool;
+const faq = [
+  {
+    q: 'Why look for a remove.bg alternative now?',
+    a: "remove.bg's standalone website closes on 1 December 2026. Nopload is a free alternative that removes backgrounds in your browser and never uploads your photo.",
+  },
+  {
+    q: 'How is Nopload different from remove.bg?',
+    a: 'remove.bg processed images on its servers and limited free downloads to a low resolution. Nopload runs the AI on your own device, so your photo stays private and every download is full resolution, with no credits or account.',
+  },
+  {
+    q: 'Is Nopload affiliated with remove.bg?',
+    a: 'No. Nopload is an independent, open tool. remove.bg is a trademark of its owner and is named here only to describe the alternative.',
+  },
+];
+---
+
+<ToolPage
+  tool={tool}
+  heading="A free remove.bg alternative that never uploads"
+  subtitle="remove.bg's standalone site closes on 1 December 2026. Cut out people and objects here instead: full resolution, no account, processed on your device."
+  faq={faq}
+  ogImage="/og/remove-background.png"
+>
+  <RemoveBackground client:load />
+</ToolPage>
