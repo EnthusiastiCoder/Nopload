@@ -1,0 +1,28 @@
+---
+// "No account" landing page: same island as /remove-background.
+import ToolPage from '../layouts/ToolPage.astro';
+import { type Tool, tools } from '../tools/registry';
+import RemoveBackground from '../tools/remove-background/RemoveBackground';
+
+const tool = tools.find((t) => t.id === 'remove-background-without-account') as Tool;
+const faq = [
+  {
+    q: 'Do I need an account or an email address?',
+    a: 'No. There is no signup, no login and no email. Open the page, drop a photo and download the result.',
+  },
+  {
+    q: 'Are there credits or a daily limit?',
+    a: 'No. Because the AI runs on your own device, there is nothing to pay for per image. Remove the background from as many photos as you like, one at a time or in a batch.',
+  },
+];
+---
+
+<ToolPage
+  tool={tool}
+  heading="Remove image backgrounds with no account"
+  subtitle="No signup, no email, no credits. Drop a photo and get a full-resolution cut-out, made privately on your device."
+  faq={faq}
+  ogImage="/og/remove-background.png"
+>
+  <RemoveBackground client:load />
+</ToolPage>
