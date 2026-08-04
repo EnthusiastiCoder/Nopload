@@ -35,7 +35,9 @@ export function Segmented<T extends string>({
               value={o.value}
               checked={value === o.value}
               onChange={() => onChange(o.value)}
-              class="sr-only"
+              // Transparent and covering the whole segment (not sr-only), so the radio itself takes
+              // the pointer: a click lands on the input, never on a label that intercepts it.
+              class="absolute inset-0 m-0 cursor-pointer appearance-none rounded-sm opacity-0"
             />
             {o.label}
           </label>
