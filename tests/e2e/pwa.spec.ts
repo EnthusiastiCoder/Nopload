@@ -4,15 +4,14 @@ import { expect, test } from '@playwright/test';
 test('E1.5 service worker registers; offline reload of / still renders the home page', async ({ page, context }) => {
   const res = await page.goto('/');
   expect(res?.status()).toBe(200);
-  const state = await page.evaluate(async () => {
-    if (!('serviceWorker' in navigator)) return 'unsupported';
-    const reg = await Promise.race([
-      navigator.serviceWorker.ready,
-      new Promise<null>((r) => setTimeout(() => r(null), 15_000)),
-    ]);
-    return reg?.active?.state ?? 'none';
-  });
-  expect(state).toBe('activated');
+  expect(await page.evaluate(() => 'serviceWorker' in navigator)).toBe(true);
+  // `ready` can resolve while the worker is still 'activating'; wait until it reaches 'activated'.
+  await expect
+    .poll(() => page.evaluate(async () => (await navigator.serviceWorker.ready).active?.state ?? 'none'), {
+      timeout: 15_000,
+      intervals: [100],
+    })
+    .toBe('activated');
   // Make sure the page is controlled before going offline.
   await page.reload();
   await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true);
