@@ -61,6 +61,8 @@ export async function pasteFile(page: Page, file: FilePayload): Promise<void> {
       const dt = new DataTransfer();
       dt.items.add(new File([bin], name, { type }));
       const ev = new ClipboardEvent('paste', { clipboardData: dt, bubbles: true, cancelable: true });
+      // Firefox ignores the constructor's clipboardData and hands out an empty one; attach the same real DataTransfer.
+      if (!ev.clipboardData?.files.length) Object.defineProperty(ev, 'clipboardData', { value: dt });
       (document.activeElement ?? document.body).dispatchEvent(ev);
     },
     { name: file.name, type: file.mimeType, b64: file.buffer.toString('base64') },
