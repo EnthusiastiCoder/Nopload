@@ -12,3 +12,4 @@ tools/info-server/content/
 .claude/permission-ask-log.jsonl
 .env*
 mistakes/
+reports/screens/
