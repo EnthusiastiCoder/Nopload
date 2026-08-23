@@ -55,6 +55,23 @@ function orientationOnlyExif(orientation: number): Uint8Array {
   return seg;
 }
 
+/** EXIF orientation (1-8) of a JPEG, or 1 when absent. */
+export function jpegOrientation(bytes: Uint8Array): number {
+  if (bytes[0] !== 0xff || bytes[1] !== 0xd8) return 1;
+  const v = dv(bytes);
+  let p = 2;
+  while (p + 4 <= bytes.length && bytes[p] === 0xff) {
+    const marker = bytes[p + 1];
+    if (marker === 0xda || marker === 0xd9) break;
+    const len = v.getUint16(p + 2);
+    if (marker === 0xe1 && ascii(bytes, p + 4, p + 10) === 'Exif\0\0') {
+      return tiffOrientation(bytes.subarray(p + 10, p + 2 + len)) ?? 1;
+    }
+    p += 2 + len;
+  }
+  return 1;
+}
+
 const ascii = (b: Uint8Array, s: number, e: number) => String.fromCharCode(...b.subarray(s, e));
 
 export function stripJpeg(bytes: Uint8Array, opts: { keepIcc?: boolean; keepOrientation?: boolean } = {}): Uint8Array {
