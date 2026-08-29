@@ -63,7 +63,7 @@ async function decode(data: Uint8Array, type: SniffedType): Promise<Pixels> {
 }
 
 async function decodeHeic(data: Uint8Array): Promise<Pixels> {
-  const libheif = (await import('libheif-js/libheif-wasm/libheif-bundle.mjs')).default;
+  const libheif = await (await import('libheif-js/libheif-wasm/libheif-bundle.mjs')).default();
   const images = new libheif.HeifDecoder().decode(data);
   if (!images?.length) throw new Error('Could not read this HEIC file');
   const img = images[0]; // primary image only; libheif applies the rotation/mirror transforms
