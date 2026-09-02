@@ -1,0 +1,31 @@
+---
+import ToolPage from '../layouts/ToolPage.astro';
+import BatchTool from '../tools/batch/BatchTool';
+import { type Tool, tools } from '../tools/registry';
+
+const tool = tools.find((t) => t.id === 'compress-image') as Tool;
+const faq = [
+  {
+    q: 'How much smaller will my images get?',
+    a: 'Most photos shrink by 50 to 80 percent at the default quality of 75 with no visible change. If re-encoding would make a file bigger, Nopload keeps your original bytes.',
+  },
+  {
+    q: 'Are my images uploaded anywhere?',
+    a: 'No. Compression runs on your device with WebAssembly. You can even use the page offline after the first visit.',
+  },
+  {
+    q: 'Can I compress a whole folder?',
+    a: 'Yes. Drop a folder or many files at once, then download everything as one ZIP or save to a folder.',
+  },
+];
+---
+
+<ToolPage
+  tool={tool}
+  heading="Compress images without uploading them"
+  subtitle="Shrink JPG, PNG and WebP photos by up to 80 percent. Everything runs in your browser, so nothing is uploaded."
+  faq={faq}
+  ogImage="/og/compress-image.png"
+>
+  <BatchTool kind="compress" client:load />
+</ToolPage>
