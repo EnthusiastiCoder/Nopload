@@ -1,0 +1,25 @@
+---
+import ToolPage from '../layouts/ToolPage.astro';
+import BatchTool from '../tools/batch/BatchTool';
+import { type Tool, tools } from '../tools/registry';
+
+const tool = tools.find((t) => t.id === 'convert-image') as Tool;
+const faq = [
+  { q: 'Which formats can I convert to?', a: 'JPG, PNG, WebP, AVIF and JPEG XL. Inputs can also be HEIC, GIF or BMP.' },
+  {
+    q: 'What happens to transparency?',
+    a: 'PNG, WebP and AVIF keep it. JPG cannot, so transparent areas are filled with your background colour, white by default.',
+  },
+  { q: 'Is quality lost?', a: 'PNG is lossless. The other formats have a quality slider that is remembered for each format.' },
+];
+---
+
+<ToolPage
+  tool={tool}
+  heading="Convert images between JPG, PNG, WebP, AVIF and JXL"
+  subtitle="Change image formats in bulk, free, with no upload. Transparent PNGs get the background colour you choose when saved as JPG."
+  faq={faq}
+  ogImage="/og/convert-image.png"
+>
+  <BatchTool kind="convert" client:load />
+</ToolPage>
