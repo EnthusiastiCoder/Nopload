@@ -1,0 +1,25 @@
+---
+import ToolPage from '../layouts/ToolPage.astro';
+import BatchTool from '../tools/batch/BatchTool';
+import { type Tool, tools } from '../tools/registry';
+
+const tool = tools.find((t) => t.id === 'resize-image') as Tool;
+const faq = [
+  {
+    q: 'What is the difference between fit and fill?',
+    a: 'Fit keeps the whole picture inside your box. Fill and crop covers the box completely and trims the overflow from the centre.',
+  },
+  { q: 'Will my photos be enlarged?', a: 'Only if you choose a size bigger than the original. Fit never changes the aspect ratio.' },
+  { q: 'Does the format change?', a: 'No. Each picture is saved in its own format, with the same file name.' },
+];
+---
+
+<ToolPage
+  tool={tool}
+  heading="Resize images to exact sizes in bulk"
+  subtitle="Fit, fill, scale or crop many photos at once. Private by design: the work happens in your browser."
+  faq={faq}
+  ogImage="/og/resize-image.png"
+>
+  <BatchTool kind="resize" client:load />
+</ToolPage>
