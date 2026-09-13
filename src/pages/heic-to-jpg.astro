@@ -1,0 +1,25 @@
+---
+import ToolPage from '../layouts/ToolPage.astro';
+import BatchTool from '../tools/batch/BatchTool';
+import { type Tool, tools } from '../tools/registry';
+
+const tool = tools.find((t) => t.id === 'heic-to-jpg') as Tool;
+const faq = [
+  {
+    q: 'Why do my iPhone photos not open on Windows?',
+    a: 'iPhones save photos as HEIC by default, which many apps cannot read. JPG works everywhere.',
+  },
+  { q: 'Is the whole Live Photo converted?', a: 'Only the main still picture is converted. Video and depth data are not included.' },
+  { q: 'Are my photos uploaded?', a: 'No. The HEIC decoder runs inside your browser, so your photos stay on your device.' },
+];
+---
+
+<ToolPage
+  tool={tool}
+  heading="Convert HEIC photos from iPhone to JPG"
+  subtitle="Turn HEIC and HEIF photos into JPG or PNG that open anywhere. No upload, no account."
+  faq={faq}
+  ogImage="/og/heic-to-jpg.png"
+>
+  <BatchTool kind="heic" client:load />
+</ToolPage>
