@@ -1,0 +1,28 @@
+---
+import ToolPage from '../layouts/ToolPage.astro';
+import BatchTool from '../tools/batch/BatchTool';
+import { type Tool, tools } from '../tools/registry';
+
+const tool = tools.find((t) => t.id === 'remove-exif') as Tool;
+const faq = [
+  {
+    q: 'What is EXIF data?',
+    a: 'Hidden details stored in a photo: where it was taken, the camera model, the date, and sometimes the editing software.',
+  },
+  { q: 'Does removing it reduce quality?', a: 'No. The metadata is cut out of the file directly, so the image pixels are untouched.' },
+  {
+    q: 'Can I keep the colour profile?',
+    a: 'Yes. Keeping the colour profile and orientation are both on by default so photos look the same.',
+  },
+];
+---
+
+<ToolPage
+  tool={tool}
+  heading="Remove EXIF and GPS data from photos"
+  subtitle="See what your photos reveal, then strip location, camera and date details without re-encoding the pixels."
+  faq={faq}
+  ogImage="/og/remove-exif.png"
+>
+  <BatchTool kind="exif" client:load />
+</ToolPage>
