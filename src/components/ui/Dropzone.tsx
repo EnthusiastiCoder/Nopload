@@ -72,7 +72,7 @@ export function Dropzone({
     if (!ok.length) return;
     // Re-set the text so the same count is announced again.
     setAnnounce('');
-    requestAnimationFrame(() => setAnnounce(`${ok.length} ${ok.length === 1 ? 'file' : 'files'} added`));
+    requestAnimationFrame(() => setAnnounce(ok.length === 1 ? '1 file added' : `${ok.length} images added`));
     cb.current.onFiles(ok);
   };
 
@@ -164,19 +164,16 @@ export function Dropzone({
         </span>
         <span class="text-lg font-semibold">{title}</span>
         <span class="text-sm text-muted">{hint}</span>
-        {folder && (
-          <button
-            type="button"
-            class="mt-1 inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 text-sm font-medium text-accent-700 hover:bg-accent-50 dark:text-accent-200 dark:hover:bg-accent-900/40"
-            onClick={(e) => {
-              e.stopPropagation();
-              folderInput.current?.click();
-            }}
-          >
-            <Icon name="folder" size={16} /> Choose a folder
-          </button>
-        )}
       </div>
+      {folder && (
+        <button
+          type="button"
+          class="mx-auto mt-2 flex min-h-9 items-center gap-1.5 rounded-md px-3 text-sm font-medium text-accent-700 hover:bg-accent-50 dark:text-accent-200 dark:hover:bg-accent-900/40"
+          onClick={() => folderInput.current?.click()}
+        >
+          <Icon name="folder" size={16} /> Choose a folder
+        </button>
+      )}
       {mounted && (
         <input
           ref={input}
