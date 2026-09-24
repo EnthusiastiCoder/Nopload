@@ -33,6 +33,9 @@ const nav = mainTools();
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
     <script is:inline src="/theme.js"></script>
+    <script>
+      import "../scripts/register-sw";
+    </script>
     <meta name="theme-color" content="#5b3df5" />
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml" />
