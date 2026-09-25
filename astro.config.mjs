@@ -43,8 +43,11 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{html,js,css,woff2,svg,png,ico}'],
-        globIgnores: ['models/**', 'ort/**', 'codecs/**', 'og/**'],
+        // The batch tools' codec wasm (~15 MB) is precached so a tool works offline after one visit.
+        globPatterns: ['**/*.{html,js,css,woff2,svg,png,ico,wasm}'],
+        clientsClaim: true,
+        parallel: { enabled: true, concurrency: 10 },
+        globIgnores: ['models/**', 'ort/**', 'codecs/**', 'og/**', '_astro/avif_enc*.wasm'],
         navigateFallback: null,
         cleanURLs: true,
         runtimeCaching: [
@@ -52,6 +55,12 @@ export default defineConfig({
             urlPattern: /\/(models|ort|codecs)\//,
             handler: 'CacheFirst',
             options: { cacheName: 'nopload-heavy', expiration: { maxEntries: 200 }, cacheableResponse: { statuses: [200] } },
+          },
+          {
+            // Codec wasm emitted by Vite for the batch tools.
+            urlPattern: /\/_astro\/.*\.wasm$/,
+            handler: 'CacheFirst',
+            options: { cacheName: 'nopload-wasm', expiration: { maxEntries: 40 }, cacheableResponse: { statuses: [200] } },
           },
         ],
       },
