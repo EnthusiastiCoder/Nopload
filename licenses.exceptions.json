@@ -4,5 +4,6 @@
   { "name": "common-ancestor-path", "license": "BlueOak-1.0.0", "reason": "Permissive (OSI-approved). Build-time only." },
   { "name": "graceful-fs", "license": "BlueOak-1.0.0", "reason": "Permissive (OSI-approved). Build-time only." },
   { "name": "lru-cache", "license": "BlueOak-1.0.0", "reason": "Permissive (OSI-approved). Build-time only." },
-  { "name": "sax", "license": "BlueOak-1.0.0", "reason": "Permissive (OSI-approved). Build-time only (sitemap)." }
+  { "name": "sax", "license": "BlueOak-1.0.0", "reason": "Permissive (OSI-approved). Build-time only (sitemap)." },
+  { "name": "libheif-js", "license": "LGPL-3.0", "reason": "HEIC decoding. Shipped as an unmodified, separately loaded wasm module (replaceable); disclosed in THIRD_PARTY_NOTICES.md." }
 ]
