@@ -2,9 +2,13 @@
 // so a job only loads the wasm it needs. All wasm is bundled by Vite and served from this origin.
 import * as Comlink from 'comlink';
 import { type SniffedType, sniffType } from '../../lib/files';
+import { cacheLoadedModules, installFetchTee } from '../../lib/offline-cache';
 import type { OutputFormat, Step } from './engine';
 import { jpegOrientation, stripJpeg, stripPng, stripWebp } from './metadata';
 import { targetSize } from './resize';
+
+// Codec wasm fetched here is stored for offline use as it streams (see lib/offline-cache.ts).
+installFetchTee();
 
 export interface WorkerTask {
   name: string;
@@ -64,6 +68,7 @@ async function decode(data: Uint8Array, type: SniffedType): Promise<Pixels> {
 
 async function decodeHeic(data: Uint8Array): Promise<Pixels> {
   const libheif = await (await import('libheif-js/libheif-wasm/libheif-bundle.mjs')).default();
+  cacheLoadedModules(); // the 2 MB libheif chunk is not precached; store it now, not awaited
   const images = new libheif.HeifDecoder().decode(data);
   if (!images?.length) throw new Error('Could not read this HEIC file');
   const img = images[0]; // primary image only; libheif applies the rotation/mirror transforms
@@ -191,6 +196,7 @@ async function run(task: WorkerTask): Promise<WorkerResult> {
   }
 
   let img = await decode(task.data, type);
+  cacheLoadedModules(); // big decoder chunks (libheif) are not precached; not awaited
   for (const s of steps) if (s.kind === 'resize') img = resize(img, s);
   const enc = steps.find((s): s is Extract<Step, { kind: 'encode' }> => s.kind === 'encode');
   const format: OutputFormat = !enc || enc.format === 'same' ? (SAME[type] ?? 'jpeg') : enc.format;
