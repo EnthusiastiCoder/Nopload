@@ -8,6 +8,7 @@
 // builds are over the Cloudflare Pages 25 MiB per-file cap, so they are not shipped.
 import * as Comlink from 'comlink';
 import type * as OrtNs from 'onnxruntime-web';
+import { cacheLoadedModules } from '../../lib/offline-cache';
 import { guideFromModnetTensor, modnetSize, normalizeMinMax, prepModnet, prepU2net, refineMatte, U2NET_SIZE } from './matte';
 
 export type ModelKind = 'person' | 'object';
@@ -61,6 +62,7 @@ function loadOrt(): Promise<{ ort: Ort; backend: Backend }> {
     ort.env.wasm.proxy = false;
     const base = backend === 'webgpu' ? '/ort/ort-wasm-simd-threaded.jspi' : '/ort/ort-wasm-simd-threaded';
     void cacheRuntime([`${base}.mjs`, `${base}.wasm`]);
+    cacheLoadedModules(); // the ORT JS chunk is worker-only, so it is not precached; not awaited
     return { ort, backend };
   })();
   return ortPromise;
