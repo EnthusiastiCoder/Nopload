@@ -1,4 +1,7 @@
 // E3.1 compress 30 files, E3.6 local + offline, E3.7 cancel.
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { unzipSync } from 'fflate';
 import { expect, test } from '@playwright/test';
 import { makeJpeg, makePng } from '../helpers/images';
@@ -42,11 +45,24 @@ test('E3.6 compress: zero third-party requests; works offline after one use', as
   await checkLocalAndOffline(page, context, ROUTE, () => jpegFile('one.jpg', makeJpeg(200, 150, 100)));
 });
 
+let e37Dir: string | undefined;
+test.afterEach(() => {
+  if (e37Dir) rmSync(e37Dir, { recursive: true, force: true });
+  e37Dir = undefined;
+});
+
 test('E3.7 Cancel during a 30-file batch stops processing; completed items stay downloadable', async ({ page }) => {
   test.setTimeout(180_000);
   await openBatch(page, ROUTE);
   const big = [1, 2, 3].map((s) => makeJpeg(3000, 2000, 95, s));
-  const files = Array.from({ length: 30 }, (_, i) => jpegFile(`big-${i}.jpg`, big[i % 3]));
+  // Files on disk: Playwright caps in-memory setInputFiles buffers at 50 MB in total.
+  const dir = mkdtempSync(join(tmpdir(), 'nopload-e37-'));
+  e37Dir = dir;
+  const files = Array.from({ length: 30 }, (_, i) => {
+    const file = join(dir, `big-${i}.jpg`);
+    writeFileSync(file, big[i % 3]);
+    return file;
+  });
   await fileInput(page).setInputFiles(files);
   await expect(fileList(page)).toHaveCount(30);
 
