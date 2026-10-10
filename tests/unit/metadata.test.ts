@@ -1,9 +1,20 @@
 // U3.2-U3.5 lossless metadata stripping and the metadata summary.
 // Fixtures are built in tests/helpers/images.ts (gps.jpg / photo.png / photo.webp equivalents).
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import exifr from 'exifr';
 import { PNG } from 'pngjs';
 import { describe, expect, it } from 'vitest';
-import { readSummary, stripJpeg, stripPng, stripWebp } from '../../src/tools/batch/metadata';
+import {
+  exifDateOnlyApp1,
+  readDateTaken,
+  readSummary,
+  stripJpeg,
+  stripPng,
+  stripWebp,
+  withDateTaken,
+} from '../../src/tools/batch/metadata';
 import {
   GPS_EXIF,
   VP8X_FLAG,
@@ -13,11 +24,14 @@ import {
   decodeJpeg,
   jpegScanData,
   jpegSegments,
+  makeJpeg,
   makePng,
   pngChunk,
   pngChunks,
   riffChunks,
 } from '../helpers/images';
+
+const FIXTURES = fileURLToPath(new URL('../fixtures/', import.meta.url));
 
 const isExifApp1 = (s: { marker: number; payload: Buffer }) =>
   s.marker === 0xe1 && s.payload.subarray(0, 6).toString('latin1') === 'Exif\0\0';
@@ -138,5 +152,31 @@ describe('readSummary (U3.5)', () => {
     const s = await readSummary(makePng(16, 16));
     expect(s.hasGps).toBe(false);
     expect(s.make).toBeUndefined();
+  });
+});
+
+describe('Keep date taken (HEIC to JPG)', () => {
+  const DATE = '2024:05:06 07:08:09';
+
+  it('readDateTaken returns the raw DateTimeOriginal, or undefined when there is none', async () => {
+    expect(await readDateTaken(buildGpsJpeg())).toBe(GPS_EXIF.dateTimeOriginal);
+    expect(await readDateTaken(makePng(16, 16))).toBeUndefined();
+    expect(await readDateTaken(readFileSync(join(FIXTURES, 'sample.heic')))).toBeUndefined();
+  });
+
+  it('withDateTaken writes an Exif holding only DateTimeOriginal; pixels unchanged', async () => {
+    const input = makeJpeg(32, 24);
+    const out = withDateTaken(input, DATE);
+    const exif = jpegSegments(out).filter(isExifApp1);
+    expect(exif).toHaveLength(1);
+    const tags = (await exifr.parse(out, { reviveValues: false, mergeOutput: true })) as Record<string, unknown>;
+    expect(tags.DateTimeOriginal).toBe(DATE);
+    expect(Object.keys(tags).filter((k) => k !== 'DateTimeOriginal' && k !== 'ExifIFDPointer' && k !== 'ExifOffset')).toEqual([]);
+    expect(await readSummary(out)).toMatchObject({ hasGps: false, make: undefined, model: undefined, software: undefined });
+    expect(decodeJpeg(out).data).toEqual(decodeJpeg(input).data);
+  });
+
+  it('rejects a malformed date', () => {
+    expect(() => exifDateOnlyApp1('2024-05-06')).toThrow();
   });
 });
