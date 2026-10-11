@@ -10,7 +10,14 @@ export type OutputFormat = 'jpeg' | 'png' | 'webp' | 'avif' | 'jxl';
 export type Step =
   | { kind: 'decode' }
   | { kind: 'resize'; mode: ResizeMode; noUpscale?: boolean }
-  | { kind: 'encode'; format: OutputFormat | 'same'; quality?: number; background?: [number, number, number] }
+  | {
+      kind: 'encode';
+      format: OutputFormat | 'same';
+      quality?: number;
+      background?: [number, number, number];
+      /** JPEG output only: copy the source's DateTimeOriginal (and nothing else) into a fresh Exif. */
+      keepDateTaken?: boolean;
+    }
   | { kind: 'stripMetadata'; keepIcc?: boolean; keepOrientation?: boolean };
 
 export interface BatchInput {
