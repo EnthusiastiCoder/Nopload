@@ -4,7 +4,7 @@ import * as Comlink from 'comlink';
 import { type SniffedType, sniffType } from '../../lib/files';
 import { cacheLoadedModules, installFetchTee } from '../../lib/offline-cache';
 import type { OutputFormat, Step } from './engine';
-import { jpegOrientation, stripJpeg, stripPng, stripWebp } from './metadata';
+import { jpegOrientation, readDateTaken, stripJpeg, stripPng, stripWebp, withDateTaken } from './metadata';
 import { targetSize } from './resize';
 
 // Codec wasm fetched here is stored for offline use as it streams (see lib/offline-cache.ts).
@@ -200,7 +200,11 @@ async function run(task: WorkerTask): Promise<WorkerResult> {
   for (const s of steps) if (s.kind === 'resize') img = resize(img, s);
   const enc = steps.find((s): s is Extract<Step, { kind: 'encode' }> => s.kind === 'encode');
   const format: OutputFormat = !enc || enc.format === 'same' ? (SAME[type] ?? 'jpeg') : enc.format;
-  const out = await encode(img, format, enc?.quality ?? 80, enc?.background ?? [255, 255, 255]);
+  let out = await encode(img, format, enc?.quality ?? 80, enc?.background ?? [255, 255, 255]);
+  if (enc?.keepDateTaken && format === 'jpeg') {
+    const date = await readDateTaken(task.data);
+    if (date) out = withDateTaken(out, date);
+  }
   return { data: out, width: img.width, height: img.height, format };
 }
 
