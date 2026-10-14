@@ -23,6 +23,8 @@ export interface Settings {
   ratio: '1:1' | '4:5' | '16:9' | '3:2';
   heicFormat: 'jpeg' | 'png';
   heicQuality: number;
+  /** Off by default (privacy): when on, the JPG gets an Exif holding only DateTimeOriginal. */
+  heicKeepDate: boolean;
   keepIcc: boolean;
   keepOrientation: boolean;
 }
@@ -41,6 +43,7 @@ export const defaultSettings = (): Settings => ({
   ratio: '1:1',
   heicFormat: 'jpeg',
   heicQuality: 90,
+  heicKeepDate: false,
   keepIcc: true,
   keepOrientation: true,
 });
@@ -92,7 +95,16 @@ export function buildPipeline(kind: Kind, s: Settings): Step[] {
       return [{ kind: 'decode' }, { kind: 'resize', mode }, { kind: 'encode', format: 'same', quality: 90 }];
     }
     case 'heic':
-      return [{ kind: 'decode' }, { kind: 'encode', format: s.heicFormat, quality: s.heicQuality, background: [255, 255, 255] }];
+      return [
+        { kind: 'decode' },
+        {
+          kind: 'encode',
+          format: s.heicFormat,
+          quality: s.heicQuality,
+          background: [255, 255, 255],
+          keepDateTaken: s.heicFormat === 'jpeg' && s.heicKeepDate,
+        },
+      ];
     case 'exif':
       return [{ kind: 'stripMetadata', keepIcc: s.keepIcc, keepOrientation: s.keepOrientation }];
   }
@@ -232,7 +244,15 @@ export function SettingsPanel({ kind, settings: s, update }: { kind: Kind; setti
             ]}
           />
           {s.heicFormat === 'jpeg' && (
-            <Slider label="JPG quality" value={s.heicQuality} min={50} max={100} onInput={(v) => update({ heicQuality: v })} />
+            <>
+              <Slider label="JPG quality" value={s.heicQuality} min={50} max={100} onInput={(v) => update({ heicQuality: v })} />
+              <Toggle
+                label="Keep date taken"
+                checked={s.heicKeepDate}
+                onChange={(v) => update({ heicKeepDate: v })}
+                hint="Off by default. When on, only the date the photo was taken is kept: no location or camera details."
+              />
+            </>
           )}
           <p class="text-sm text-muted">Only the main picture of each HEIC file is converted, not Live Photo video or depth data.</p>
         </>
