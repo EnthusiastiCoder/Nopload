@@ -1,15 +1,24 @@
 // Shared UI for the five batch tools: dropzone, live file list, summary bar, ZIP / folder download, cancel.
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { NextSteps } from '../../components/NextSteps';
 import { Button } from '../../components/ui/Button';
 import { Dropzone } from '../../components/ui/Dropzone';
 import { type FileItem, FileList } from '../../components/ui/FileList';
 import { formatBytes } from '../../lib/files';
+import { takeHandoff } from '../../lib/handoff';
 import { canSaveToFolder, saveAll } from '../../lib/zip';
 import { type BatchResult, poolSize, processBatch, type Step } from './engine';
 import { readSummary } from './metadata';
 import { buildPipeline, defaultSettings, type Kind, type Settings, SettingsPanel } from './SettingsPanels';
 
 const ACCEPT = 'image/*,.heic,.heif,.avif,.jxl';
+const SLUG: Record<Kind, string> = {
+  compress: 'compress-image',
+  convert: 'convert-image',
+  resize: 'resize-image',
+  heic: 'heic-to-jpg',
+  exif: 'remove-exif',
+};
 
 export interface Finding {
   id: string;
@@ -42,6 +51,14 @@ export default function BatchTool({ kind }: { kind: Kind }) {
   settingsRef.current = settings;
 
   useEffect(() => setSettings(loadSettings(kind)), [kind]);
+  // Files handed over by another tool ("Next: compress these") are queued without a re-drop.
+  useEffect(() => {
+    void takeHandoff().then((files) => {
+      if (!files.length) return;
+      settingsRef.current = loadSettings(kind);
+      void addFiles(files);
+    });
+  }, []);
   const update = (patch: Partial<Settings>) => {
     const next = { ...settings, ...patch };
     setSettings(next);
@@ -151,6 +168,12 @@ export default function BatchTool({ kind }: { kind: Kind }) {
     if (r) void r.blob.arrayBuffer().then((b) => saveAll([{ name: r.name, data: new Uint8Array(b) }]));
   };
 
+  const forNext = async () =>
+    doneItems.map((it) => {
+      const r = results.current.get(it.id) as BatchResult;
+      return { name: r.name, blob: r.blob };
+    });
+
   const summary = useMemo(() => {
     const a = doneItems.reduce((s, i) => s + i.inBytes, 0);
     const b = doneItems.reduce((s, i) => s + (i.outBytes ?? 0), 0);
@@ -183,6 +206,7 @@ export default function BatchTool({ kind }: { kind: Kind }) {
       )}
       {n > 0 && (
         <>
+          {doneItems.length > 0 && !busy && <NextSteps current={SLUG[kind]} count={doneItems.length} getFiles={forNext} />}
           <div data-testid="file-list">
             <FileList items={items} onRemove={undefined} onDownload={download} />
           </div>
