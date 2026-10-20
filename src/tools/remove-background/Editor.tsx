@@ -1,6 +1,7 @@
 // The single-image editor: preview with Erase/Restore brushes and undo, background, edge softness,
 // crop, model choice, a before/after compare, and full-resolution downloads.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { NextSteps } from '../../components/NextSteps';
 import { BeforeAfter } from '../../components/ui/BeforeAfter';
 import { Button } from '../../components/ui/Button';
 import { Icon } from '../../components/ui/Icon';
@@ -330,6 +331,12 @@ export function Editor({
     }
   };
 
+  /** The current edit as a PNG, for the next tool. */
+  const pngForNext = async () => {
+    const blob = await encode(render(rgba, edit.current, W, H, settings), 'png');
+    return [{ name: outputName(name, { suffix: '-nobg', ext: 'png' }), blob }];
+  };
+
   const transparent = bg.kind === 'transparent';
 
   return (
@@ -429,6 +436,7 @@ export function Editor({
             {newLabel}
           </Button>
         </div>
+        <NextSteps current="remove-background" count={1} getFiles={pngForNext} disabled={busy !== null} />
       </div>
     </div>
   );
