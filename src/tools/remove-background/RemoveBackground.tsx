@@ -2,6 +2,7 @@
 // runtime and the model are fetched on first use. One image opens the editor; several run as a batch.
 import * as Comlink from 'comlink';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { NextSteps } from '../../components/NextSteps';
 import { Button } from '../../components/ui/Button';
 import { Dropzone } from '../../components/ui/Dropzone';
 import { type FileItem, FileList } from '../../components/ui/FileList';
@@ -9,6 +10,7 @@ import { Icon } from '../../components/ui/Icon';
 import { ProgressBar } from '../../components/ui/ProgressBar';
 import { toast } from '../../components/ui/Toast';
 import { outputName } from '../../lib/files';
+import { takeHandoff } from '../../lib/handoff';
 import { downloadBlob, saveAll } from '../../lib/zip';
 import { BackgroundPicker } from './BackgroundPicker';
 import type { Backend, BgApi, BgResult, ModelKind, Progress } from './bg.worker';
@@ -76,6 +78,7 @@ export default function RemoveBackground() {
   const settings = useRef<RenderSettings>(DEFAULT_SETTINGS);
   const [batchBg, setBatchBg] = useState(DEFAULT_SETTINGS.background);
   const run = useRef(0);
+  const [converting, setConverting] = useState(false);
 
   useEffect(
     () => () => {
@@ -163,18 +166,48 @@ export default function RemoveBackground() {
     }
   };
 
-  const onFiles = (files: File[]) => {
-    const heic = files.filter(isHeic);
-    if (heic.length)
-      toast('Convert HEIC first', {
-        kind: 'error',
-        action: { label: 'Open HEIC to JPG', onClick: () => location.assign('/heic-to-jpg') },
-      });
-    const ok = files.filter((f) => !isHeic(f));
+  /** HEIC is decoded by the batch tools' codec worker (libheif) into a lossless PNG first. */
+  const fromHeic = async (file: File): Promise<File> => {
+    const { processBatch } = await import('../batch/engine');
+    const [r] = await processBatch(
+      [{ name: file.name, data: new Uint8Array(await file.arrayBuffer()) }],
+      [{ kind: 'decode' }, { kind: 'encode', format: 'png' }],
+      { concurrency: 1 },
+    );
+    return new File([r.blob], outputName(file.name, { ext: 'png' }), { type: 'image/png' });
+  };
+
+  const onFiles = async (files: File[]) => {
+    let ok = files;
+    if (files.some(isHeic)) {
+      setConverting(true);
+      try {
+        ok = await Promise.all(
+          files.map(async (f) => {
+            if (!isHeic(f)) return f;
+            try {
+              return await fromHeic(f);
+            } catch (err) {
+              toast(`Could not read ${f.name}: ${errMsg(err)}`, { kind: 'error' });
+              return null;
+            }
+          }),
+        ).then((l) => l.filter((f): f is File => !!f));
+      } finally {
+        setConverting(false);
+      }
+    }
     if (!ok.length) return;
     if (ok.length === 1 && !batch) void startSingle(ok[0], single?.kind ?? 'person');
     else void startBatch(batch ? [...batch.map((b) => b.file), ...ok] : ok, batchKind);
   };
+
+  // Files handed over by another tool ("Next: remove background") start right away.
+  useEffect(() => {
+    void takeHandoff().then((files) => {
+      if (files.length) void onFiles(files);
+    });
+  }, []);
 
   const trySample = async (id: string) => {
     try {
@@ -203,6 +236,18 @@ export default function RemoveBackground() {
     } catch (err) {
       toast(`Could not save the files: ${errMsg(err)}`, { kind: 'error' });
     }
+  };
+
+  /** Every finished file as a PNG with the current settings, for the next tool. */
+  const batchPngs = async () => {
+    const taken = new Set<string>();
+    const out: { name: string; blob: Blob }[] = [];
+    for (const e of batch ?? []) {
+      if (e.status !== 'done' || !e.result) continue;
+      const blob = e.encodedWith === settings.current && e.png ? e.png : await encodeEntry(e, settings.current);
+      out.push({ name: outputName(e.file.name, { suffix: '-nobg', ext: 'png' }, taken), blob });
+    }
+    return out;
   };
 
   const downloadOne = async (eid: string) => {
@@ -281,6 +326,7 @@ export default function RemoveBackground() {
             </Button>
           </div>
         </div>
+        <NextSteps current="remove-background" count={done} getFiles={batchPngs} />
         <FileList
           items={items}
           onOpen={(id) => setOpenId(id)}
@@ -335,6 +381,20 @@ export default function RemoveBackground() {
         <Button variant="ghost" onClick={reset}>
           Cancel
         </Button>
+      </div>
+    );
+  }
+
+  if (converting) {
+    return (
+      <div class="flex flex-col items-center gap-4 rounded-xl border border-line bg-surface px-6 py-16 text-center" aria-busy="true">
+        <p class="text-lg font-semibold">Reading your HEIC photo</p>
+        <div class="w-full max-w-md">
+          <ProgressBar label="Decoding HEIC" />
+        </div>
+        <p class="text-sm text-muted" aria-live="polite">
+          Decoding on your device...
+        </p>
       </div>
     );
   }
