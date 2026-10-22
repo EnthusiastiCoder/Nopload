@@ -6,7 +6,7 @@ import { mainTools } from '../tools/registry';
 
 const site = Astro.site ?? new URL('https://nopload.pages.dev');
 const list = mainTools();
-const chooser = list.map(({ slug, name, icon, blurb }) => ({ slug, name, icon, blurb }));
+const chooser = list.map(({ slug, name, icon, blurb, accepts }) => ({ slug, name, icon, blurb, accepts }));
 const jsonLd = [
   {
     '@type': 'WebSite',
