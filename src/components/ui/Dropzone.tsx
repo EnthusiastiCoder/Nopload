@@ -168,7 +168,7 @@ export function Dropzone({
       {folder && (
         <button
           type="button"
-          class="mx-auto mt-2 flex min-h-9 items-center gap-1.5 rounded-md px-3 text-sm font-medium text-accent-700 hover:bg-accent-50 dark:text-accent-200 dark:hover:bg-accent-900/40"
+          class="mx-auto mt-2 flex min-h-9 pointer-coarse:min-h-11 items-center gap-1.5 rounded-md px-3 text-sm font-medium text-accent-700 hover:bg-accent-50 dark:text-accent-200 dark:hover:bg-accent-900/40"
           onClick={() => folderInput.current?.click()}
         >
           <Icon name="folder" size={16} /> Choose a folder
