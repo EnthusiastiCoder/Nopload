@@ -25,7 +25,7 @@ export function Segmented<T extends string>({
         {options.map((o) => (
           <label
             key={o.value}
-            class={`relative flex min-h-9 flex-1 cursor-pointer items-center justify-center rounded-sm px-3 text-sm font-medium transition-colors duration-[var(--duration-fast)] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-[var(--color-ring)] ${
+            class={`relative flex min-h-9 pointer-coarse:min-h-11 flex-1 cursor-pointer items-center justify-center rounded-sm px-3 text-sm font-medium transition-colors duration-[var(--duration-fast)] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-[var(--color-ring)] ${
               value === o.value ? 'bg-surface text-fg shadow-soft' : 'text-muted hover:text-fg'
             }`}
           >
