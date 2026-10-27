@@ -36,7 +36,7 @@ export function Slider({
         step={step}
         value={value}
         onInput={(e) => onInput(Number((e.target as HTMLInputElement).value))}
-        class="h-2 w-full cursor-pointer accent-[var(--color-accent-600)]"
+        class="h-2 pointer-coarse:h-11 w-full cursor-pointer accent-[var(--color-accent-600)]"
       />
     </div>
   );
