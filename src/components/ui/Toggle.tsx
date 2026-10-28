@@ -24,11 +24,15 @@ export function Toggle({
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        class={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors duration-[var(--duration-base)] ${checked ? 'bg-accent-600' : 'bg-line'}`}
+        class="inline-flex h-11 w-12 shrink-0 items-center rounded-full"
       >
         <span
-          class={`inline-block h-5 w-5 rounded-full bg-white shadow-soft transition-transform duration-[var(--duration-base)] ${checked ? 'translate-x-6' : 'translate-x-1'}`}
-        />
+          class={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-[var(--duration-base)] ${checked ? 'bg-accent-600' : 'bg-line'}`}
+        >
+          <span
+            class={`inline-block h-5 w-5 rounded-full bg-white shadow-soft transition-transform duration-[var(--duration-base)] ${checked ? 'translate-x-6' : 'translate-x-1'}`}
+          />
+        </span>
       </button>
     </div>
   );
