@@ -73,7 +73,7 @@ export function Toaster() {
             {t.action && (
               <button
                 type="button"
-                class="rounded-md px-2 py-1 font-semibold text-accent-600 hover:bg-surface-2 dark:text-accent-300"
+                class="-my-2.5 min-h-11 rounded-md px-2 font-semibold text-accent-600 hover:bg-surface-2 dark:text-accent-300"
                 onClick={() => {
                   t.action!.onClick();
                   dismissToast(t.id);
@@ -85,7 +85,7 @@ export function Toaster() {
             <button
               type="button"
               aria-label="Dismiss"
-              class="rounded-md p-1 text-muted hover:bg-surface-2"
+              class="-m-2.5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-muted hover:bg-surface-2"
               onClick={() => dismissToast(t.id)}
             >
               <Icon name="x" size={16} />
