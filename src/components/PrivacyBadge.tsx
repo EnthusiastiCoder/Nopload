@@ -38,7 +38,7 @@ export function PrivacyBadge() {
           setOpen(true);
         }}
         aria-label={`${label}. Show network activity`}
-        class="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line bg-surface px-3 text-sm font-medium text-fg shadow-soft transition-colors hover:bg-surface-2"
+        class="inline-flex min-h-11 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-line bg-surface px-3 text-sm font-medium text-fg shadow-soft transition-colors hover:bg-surface-2"
       >
         <Icon name="shield" size={16} class="text-mint-600" />
         <span>0 uploads</span>
