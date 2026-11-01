@@ -92,14 +92,14 @@ export function BackgroundPicker({ value, onChange }: { value: BgChoice; onChang
         <button
           type="button"
           aria-pressed={value.kind === 'blur'}
-          class={`min-h-9 rounded-md px-3 text-sm font-medium ${ring(value.kind === 'blur')} ${value.kind === 'blur' ? 'bg-surface' : 'bg-surface-2'}`}
+          class={`min-h-9 pointer-coarse:min-h-11 rounded-md px-3 text-sm font-medium ${ring(value.kind === 'blur')} ${value.kind === 'blur' ? 'bg-surface' : 'bg-surface-2'}`}
           onClick={() => onChange({ kind: 'blur' })}
         >
           Blur original
         </button>
         <label
           for={imageId}
-          class={`flex min-h-9 cursor-pointer items-center rounded-md px-3 text-sm font-medium has-[:focus-visible]:outline-2 ${ring(value.kind === 'image')} ${value.kind === 'image' ? 'bg-surface' : 'bg-surface-2'}`}
+          class={`flex min-h-9 pointer-coarse:min-h-11 cursor-pointer items-center rounded-md px-3 text-sm font-medium has-[:focus-visible]:outline-2 ${ring(value.kind === 'image')} ${value.kind === 'image' ? 'bg-surface' : 'bg-surface-2'}`}
         >
           {value.kind === 'image' ? `Image: ${value.name}` : 'Use an image'}
           <input id={imageId} type="file" accept="image/*" class="sr-only" onChange={pickImage} />
