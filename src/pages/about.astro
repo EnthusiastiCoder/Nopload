@@ -44,8 +44,8 @@ const jsonLd = [{ '@type': 'AboutPage', name: 'About Nopload', description: 'Why
       <ul class="divide-y divide-line rounded-xl border border-line bg-surface">
         {
           notices.map(([name, licence, url]) => (
-            <li class="flex items-center justify-between gap-4 px-4 py-3 text-sm">
-              <a href={url} class="font-medium underline underline-offset-4" rel="noopener">
+            <li class="flex items-center justify-between gap-4 px-4 text-sm">
+              <a href={url} class="inline-flex min-h-11 min-w-11 items-center py-1 font-medium underline underline-offset-4" rel="noopener">
                 {name}
               </a>
               <span class="text-muted">{licence}</span>
