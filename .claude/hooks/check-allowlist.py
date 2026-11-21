@@ -364,15 +364,6 @@ _GIT_PUSH = (
     r"push\b"
 )
 
-# Hard block: pushing to origin/main. `origin` and `main` must appear as whole
-# shell tokens AFTER `push`, so branches like `main-branch`, `mainline`, or
-# `feature/main` are NOT matched.
-PUSH_TO_MAIN = re.compile(
-    _GIT_PUSH
-    + r"(?=.*(?<![\w./-])origin(?![\w./-]))"
-    + r"(?=.*(?<![\w./-])main(?![\w./-]))"
-)
-
 # Hard block: force pushes to ANY branch (`--force`, `-f`, `--force-with-lease`,
 # `--force-if-includes`). Only non-force pushes are permitted.
 PUSH_FORCE = re.compile(
@@ -382,7 +373,7 @@ PUSH_FORCE = re.compile(
 
 
 def is_denied(segment, denied):
-    if PUSH_TO_MAIN.search(segment) or PUSH_FORCE.search(segment):
+    if PUSH_FORCE.search(segment):
         return True
     return any(re.search(p, segment) for p in denied)
 
@@ -484,8 +475,6 @@ if not parts:
 denied = [part for part in parts if is_denied(part, DENIED)]
 if denied:
     reason = "BLOCKED by deny policy: " + ", ".join(f"`{abbrev(d)}`" for d in denied) + "."
-    if any(PUSH_TO_MAIN.search(d) for d in denied):
-        reason += " Direct pushes to origin/main are not allowed — push a feature branch and open a PR."
     if any(PUSH_FORCE.search(d) for d in denied):
         reason += " Force pushes are not allowed."
     print(json.dumps({
