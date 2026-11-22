@@ -2,6 +2,8 @@
 
 Edit images without uploading them: a free, ad-free image suite where every byte is processed in your browser.
 
+Live: https://nopload-92m.pages.dev
+
 | Light | Dark |
 | --- | --- |
 | ![Nopload home page, light theme, desktop](docs/screenshots/home-light-desktop.png) | ![Nopload home page, dark theme, desktop](docs/screenshots/home-dark-desktop.png) |
